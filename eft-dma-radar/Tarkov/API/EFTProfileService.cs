@@ -132,7 +132,7 @@ namespace eft_dma_radar.Tarkov.API
                     result = await LookupFromTarkovDevAsync(accountId);
                     /// eft-api.tech now requires a bearer token, in the future should implement a backend server to do the API requests for this.
                     /// Disabling it for now.
-                    //result ??= await LookupFromEftApiTechAsync(accountId);
+                    result ??= await LookupFromEftApiTechAsync(accountId);
                     if (result is not null ||
                         (result is null && /*_eftApiNotFound.Contains(accountId) &&*/ _tdevNotFound.Contains(accountId)))
                     {
@@ -206,7 +206,12 @@ namespace eft_dma_radar.Tarkov.API
                     return null;
                 }
                 string url = baseUrl + accountId + "?includeOnlyPmcStats=true";
-                using var response = await _client.GetAsync(url);
+
+                // Add bearer token to the request header
+                using var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer API TOKEN HERE");
+
+                using var response = await client.GetAsync(url);
                 if (response.StatusCode is HttpStatusCode.NotFound)
                 {
                     LoneLogging.WriteLine($"[EFTProfileService] Profile '{accountId}' not found by eft-api.tech.");
@@ -232,6 +237,7 @@ namespace eft_dma_radar.Tarkov.API
                 return null;
             }
         }
+
 
         #region Profile Response JSON Structure
 
