@@ -209,7 +209,7 @@ namespace eft_dma_radar.Tarkov.API
 
                 // Add bearer token to the request header
                 using var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer API CODE HERE");
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer ");
 
                 using var response = await client.GetAsync(url);
                 if (response.StatusCode is HttpStatusCode.NotFound)
